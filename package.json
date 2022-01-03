@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/sandurijal03/ecom_server/issues"
   },
-  "homepage": "https://github.com/sandurijal03/ecom_server#readme"
+  "homepage": "https://github.com/sandurijal03/ecom_server#readme",
+  "dependencies": {
+    "express": "^4.17.2"
+  }
 }
