@@ -43,6 +43,40 @@ const register = async (req, res) => {
   }
 };
 
+const login = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    let { email, password } = req.body;
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'User not found.Please register.' }] });
+    }
+
+    const matchedPassword = await bcrypt.compare(password, user.password);
+    if (!matchedPassword) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: 'Either user or password in incorrect.' }] });
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+      },
+    };
+    const token = generateToken(payload);
+    return res.status(200).json({ success: true, token });
+  } catch (err) {
+    return res.status(500).json({ err });
+  }
+};
+
 const getLoggedinUser = async (req, res, next) => {
   const { id } = req.user;
 
@@ -57,5 +91,6 @@ const getLoggedinUser = async (req, res, next) => {
 
 module.exports = {
   register,
+  login,
   getLoggedinUser,
 };
