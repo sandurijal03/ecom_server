@@ -1,6 +1,14 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const User = require('../../models/User');
+
+const generateToken = (payload) => {
+  return jwt.sign(payload, process.env.JWT_SECRET, {
+    algorithm: 'HS256',
+    expiresIn: '7d',
+  });
+};
 
 const register = async (req, res) => {
   const errors = validationResult(req);
@@ -23,7 +31,13 @@ const register = async (req, res) => {
       password: hashedPassword,
     });
     const newUser = await user.save();
-    return res.status(200).json({ user: newUser });
+    const payload = {
+      user: {
+        id: newUser.id,
+      },
+    };
+    const token = generateToken(payload);
+    return res.status(200).json({ success: true, token });
   } catch (err) {
     return res.status(500).json({ err });
   }
