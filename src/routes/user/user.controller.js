@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const User = require('../../models/User');
 
@@ -13,10 +14,13 @@ const register = async (req, res) => {
     if (user) {
       return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
     }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     user = await new User({
       name,
       email,
-      password,
+      password: hashedPassword,
     });
     const newUser = await user.save();
     return res.status(200).json({ user: newUser });
