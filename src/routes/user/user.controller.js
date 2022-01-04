@@ -43,6 +43,19 @@ const register = async (req, res) => {
   }
 };
 
+const getLoggedinUser = async (req, res, next) => {
+  const { id } = req.user;
+
+  try {
+    const user = await User.findOne({ id }).select('-password');
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ msg: `Server error ${err}` });
+  }
+};
+
 module.exports = {
   register,
+  getLoggedinUser,
 };
