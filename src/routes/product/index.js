@@ -1,7 +1,11 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { createProduct, getAllProduct } = require('./product.controller');
+const {
+  createProduct,
+  getAllProduct,
+  getSingleProduct,
+} = require('./product.controller');
 
 const router = Router();
 
