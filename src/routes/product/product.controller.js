@@ -35,7 +35,18 @@ const getAllProduct = async (req, res) => {
   }
 };
 
+const getSingleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findOne({ id });
+    return res.status(200).json({ product });
+  } catch (err) {
+    return res.status(500).json({ msg: 'Error' });
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProduct,
+  getSingleProduct,
 };
