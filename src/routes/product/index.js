@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
+const auth = require('../../middlewares/auth');
 
 const {
   createProduct,
@@ -10,11 +11,11 @@ const {
 const router = Router();
 
 router.get('/', getAllProduct);
-router.get('/id', getSingleProduct);
+router.get('/:id', getSingleProduct);
 router.post(
   '/',
+  auth,
   [
-    auth,
     [
       check('name', 'Product name is required').not().isEmpty(),
       check('description', 'Product description is required'),
